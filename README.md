@@ -1,1 +1,1 @@
-# fav-react
+# starter-react
