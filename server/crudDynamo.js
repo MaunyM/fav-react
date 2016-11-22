@@ -1,36 +1,47 @@
-var AWS = require("aws-sdk");
+"use strict";
+const AWS = require("aws-sdk");
+const uuid = require('uuid');
 
-AWS.config.update({region: "eu-west-2", endpoint: "https://dynamodb.eu-west-1.amazonaws.com"});
+AWS.config.update({
+    region: "eu-west-1",
+    endpoint: "https://dynamodb.eu-west-1.amazonaws.com"
+});
 
 var docClient = new AWS.DynamoDB.DocumentClient();
 
-function create(item, table) {
-    let params = {
-        TableName: table,
-        Item: item
-    };
-    docClient.put(params, function(err, data) {
-        if (err) {
-            console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-        } else {
-            console.log("Added item:", JSON.stringify(data, null, 2));
-        }
-    });
-}
+module.exports = (table) => {
+    return {
+        create: item => {
+            item.id = uuid();
+            let params = {
+                TableName: table,
+                Item: item
+            };
+            docClient.put(params, function(err, data) {
+                if (err) {
+                    console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+                }
+            });
+            return item
+        },
 
-function read(key, table) {
-    let params = {
-        TableName: table,
-        Key: key
-    };
-    docClient.get(params, function(err, data) {
-        if (err) {
-            console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
-        } else {
-            console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
-            return data;
+        read: (id,callback) => {
+            let params = {
+                TableName: table,
+                Key: {
+                    id: id
+                }
+            };
+            docClient.get(params, function(err, data) {
+                if (err) {
+                    console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+                } else {
+                    console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+                    callback(data);
+                }
+            });
         }
-    });
+    }
 }
 
 function update(key, item, table) {
@@ -48,8 +59,8 @@ function update(key, item, table) {
     });
 }
 
-function delete(key, table) {
-    var params = {
+function del(key, table) {
+    let params = {
         TableName: table,
         Key: key
     };
