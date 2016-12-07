@@ -1,14 +1,19 @@
 var express = require('express')
+var bodyParser = require('body-parser')
 var app = express()
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
 var crud = require('./server/crudDynamo.js')
 
 var crudFav = crud("fav")
 
-app.get('/api/fav/create', function(req, res) {
+app.post('/api/fav/create', function(req, res) {
+    let fav = req.body.fav
     res.json(
         crudFav.create({
-            name: "mma",
-            url: "google.com"
+            name: fav.name,
+            url: fav.url
         }))
 })
 
@@ -18,8 +23,8 @@ app.get('/api/fav/:id', function(req, res) {
     })
 })
 
-app.listen(3000, function() {
-    console.log('Example app listening on port 3000!')
+app.listen(3001, function() {
+    console.log('Example app listening on port 3001!')
 })
 
 module.exports = app;
