@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import FavForm from './FavForm';
+import FavList from './FavList';
 
 class App extends Component {
     render() {
@@ -12,6 +13,7 @@ class App extends Component {
                 </div>
                 <div className="ui container">
                     <FavForm></FavForm>
+                    <FavList></FavList>
                 </div>
             </div>
         );

@@ -22,6 +22,11 @@ app.get('/api/fav/:id', function(req, res) {
         res.json(fav)
     })
 })
+app.get('/api/fav', function(req, res) {
+    crudFav.readAll(favs => {
+        res.json(favs)
+    })
+})
 
 app.listen(3001, function() {
     console.log('Example app listening on port 3001!')

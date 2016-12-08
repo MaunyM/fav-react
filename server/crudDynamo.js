@@ -40,6 +40,20 @@ module.exports = (table) => {
                     callback(data);
                 }
             });
+        },
+
+        readAll: (callback) => {
+            let params = {
+                TableName: table,
+            };
+            docClient.scan(params, function(err, data) {
+              if (err) {
+                  console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+              } else {
+                  console.log("Query succeeded.");
+                  callback(data.Items);
+              }
+            });
         }
     }
 }

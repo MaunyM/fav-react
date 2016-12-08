@@ -9,7 +9,19 @@ function add(fav) {
     });
 }
 
+function readAll(cb) {
+  return fetch(`api/fav`, {
+      accept: 'application/json',
+    }).then(parseJSON)
+      .then(cb);
+}
+
+function parseJSON(response) {
+  return response.json();
+}
+
 const ApiClient = {
-    add
+    add,
+    readAll
 };
 export default ApiClient;
